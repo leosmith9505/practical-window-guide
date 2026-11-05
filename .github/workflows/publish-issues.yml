@@ -3,7 +3,9 @@ name: Publish Issues to GitHub Pages
 on:
   issues:
     types: [opened, edited, reopened, closed]
+
   workflow_dispatch:
+
   schedule:
     - cron: "*/30 * * * *"
 
@@ -37,15 +39,15 @@ jobs:
 
       - name: Generate articles from Issues
         env:
-          GH_TOKEN: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
-          GH_REPOSITORY: $&#123;&#123; github.repository &#125;&#125;
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPOSITORY: leosmith9505/practical-window-guide
         run: python scripts/publish_issues.py
 
       - name: Commit generated pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add articles/ index.html
+          git add -A index.html articles/
           if ! git diff --cached --quiet; then
             git commit -m "Update articles from GitHub Issues"
             git push
